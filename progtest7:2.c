@@ -14,12 +14,13 @@
 */
 
 #include <stdio.h>
+#include <stdio.h>
 #include <float.h>
 #include <stdlib.h>
 
-long double factorial(long double a)
+long int factorial(long int a)
 {
-    if (a == 1)
+    if ((a == 1) || (a == 0))
         return 1;
     else
     {
@@ -28,7 +29,7 @@ long double factorial(long double a)
     }
 }
 
-long double combination(long double a, long double b)
+long int combination(long int a, long int b)
 {
     return factorial(a) / (factorial(b) * factorial(a-b));
 }
@@ -36,14 +37,13 @@ long double combination(long double a, long double b)
 
 int main()
 {
-    long double a, b;
-    printf("Enter combination number\n");
-    if (scanf("%Lf %Lf", &a, &b) != 2){
-        printf("Error");
+    long int a, b;
+    printf("Enter n and k:\n");
+    if ((scanf("%ld %ld", &a, &b) != 2) || (a<0) || (b<0) || (a<b)){
+        printf("Invalid input.\n");
         return EXIT_FAILURE;
     }
-
-    a=combination(a,b);
-	printf("%.Lf\n", a);
+        a=combination(a,b);
+	printf("C = %.ld\n", a);
 	return 0;
 }

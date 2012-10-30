@@ -15,29 +15,40 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <math.h>
 
-
-int main()
+int main(void)
 {
-    char str[256];
-    char loc[512];
-    static char lookup[] = { '0', '1', '2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
-    int j = 0;
+    char input[256];
+    int x=0, order=0, num=0;
+
+    printf("Enter a hexadecimal number:\n");
+    gets(input);
     
-    printf("Enter string\n");
-    gets(str);
-    printf("Entered string is: %s\n", str);
-    
-    
-    for (int i=0; i<strlen(str); ++i)
-    {
-        loc[j++] = lookup[(str[i] & 0xf0) >> 4];
-        loc[j++] = lookup[str[i] & 0xf];
-    }
-    loc[j] = 0;
-    
-    printf("Hex value is: %s", loc);
+    while (input[x] != '\0'){
+        if((input[x]>='0' && input[x]<='9') || (input[x]>='a' && input[x]<='f') || (input[x]>='A' && input[x]<='F')){
+            order++;
+        }
+        else{ printf("Invalid input.\n"); return EXIT_FAILURE;}
    
-	return 0;
+    x++;
+    }
+    
+    order--;
+    for(int i=0; i<x; i++){
+        if(input[i]>='0' && input[i]<='9'){
+            num +=(input[i]-48)*pow(16.0f, order);
+            order--;
+            }
+        else if (input[i]>='a' && input[i]<='f'){
+            num +=(input[i]-87)*pow(16.0f, order);
+            order--;
+            }
+        else if (input[i]>='A' && input[i]<='F'){
+            num +=(input[i]-55)*pow(16.0f, order);
+            order--;
+        }
+    }
+    printf("Decimal: %d\n", num);
+    return 0;
 }
