@@ -19,27 +19,58 @@
 
 #define STRINGSIZE 80
 
-int main(int argc, char *argv[])
+int main(void)
 {
-    if(argc != 2){
-        printf("Wrong parameters.\n");
-        return EXIT_FAILURE;
-    }
-    FILE *file;
-    char str1[STRINGSIZE], str2[STRINGSIZE], str3[STRINGSIZE];
-    file = fopen(argv[1], "r");
-    if(file == NULL){
-        printf("Error opening file.\n");
-        return EXIT_FAILURE;
-    }
-    if (fscanf(file,"%s %s %s", str1, str2, str3) !=3){
-        printf("Error reading file.\n");
+    char str1[STRINGSIZE], str2[STRINGSIZE], str3[STRINGSIZE], ch;
+    
+    printf("Enter the 3 words:\n");
+    
+    if (scanf("%s", str1) !=1){
+        printf("Invalid input.\n");
         return EXIT_FAILURE;
     }
     
-    printf("Loaded OK.\n");
-    if((strcmp(str1, str2) == 0) && (strcmp(str2, str3) == 0))
-       printf("Strings are identical.\n");
-    fclose(file);
+    ch = getc(stdin);
+    if(ch != ' '){
+        printf("Invalid input.\n");
+        return EXIT_FAILURE;
+    }
+    
+    if (scanf("%s", str2) !=1){
+        printf("Invalid input.\n");
+        return EXIT_FAILURE;
+    }
+    
+    ch = getc(stdin);
+    if(ch != ' '){
+        printf("Invalid input.\n");
+        return EXIT_FAILURE;
+    }
+    
+    if (scanf("%s", str3) !=1){
+        printf("Invalid input.\n");
+        return EXIT_FAILURE;
+    }
+    
+    ch = getc(stdin);
+    if((ch != '\n') && (ch != '\0')){
+        printf("Invalid input.\n");
+        return EXIT_FAILURE;
+    }
+
+    if(strcasecmp(str1, str2) == 0)
+        printf("Word1 and word2 are the same.\n");
+    else printf("Word1 and word2 are not the same.\n");
+    if(strcasecmp(str1, str3) == 0)
+        printf("Word1 and word3 are the same.\n");
+    else printf("Word1 and word3 are not the same.\n");
+    if(strcasecmp(str2, str3) == 0)
+        printf("Word2 and word3 are the same.\n");
+    else printf("Word2 and word3 are not the same.\n");
+    
+    printf("The number of characters in word1 is: %lu\n", strlen(str1));
+    printf("The number of characters in word2 is: %lu\n", strlen(str2));
+    printf("The number of characters in word3 is: %lu\n", strlen(str3));
+    
     return EXIT_SUCCESS;
 }
