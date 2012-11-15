@@ -17,92 +17,64 @@
 #include <stdlib.h>
 #include <string.h>
 
-static inline int bitshift(char *sum, int index){
-    for(int i=index; i>0; i--){
-        sum[i] = sum[i-1];
-    }
-    return EXIT_SUCCESS;
-}
+typedef struct binary{
+    char * number;
+    size_t length;
+}Tbinary;
 
 //exterminate leading zeros
-int exterminate(char * bin, int length){
-    while(bin[0] == '0'){
-        if(length <= 2)
-            return EXIT_SUCCESS;
-        for(int k =0; k<length; k++){
-            bin[k]=bin[k+1];
-        }
-        length--;
-        bin[length] = '\0';
+size_t exterminate(char * bin, size_t length){
+    char * pch = NULL;
+    long position = 0;
+    
+    pch = strchr(bin, '1');
+    if(pch==NULL){
+        bin[1] = '\0';
+        length = 2;
     }
+    else{
+        position = pch-bin;
+        strcpy(bin, pch);
+    }
+    
+    return (length-position);
+}
+
+int binaryAdd(Tbinary first, Tbinary second){
+    int a=0, b=0, sum=0, carry=0;
+    size_t index = first.length;
+    first.number[first.length] = '\0';
+    
+    while((first.length != 0) || (carry != 0)){
+        if(first.length>1) a= first.number[first.length-2]-'0';
+        else a = 0;
+        if(second.length>1) b= second.number[second.length-2]-'0';
+        else b = 0;
+        sum = (a+b+carry)%2;
+        first.number[first.length-1] = (sum)+'0';
+        carry = (a+b+carry)/2;
+        if(first.length >0)first.length--;
+        if(second.length >0)second.length--;
+    }
+    
+    exterminate(first.number,index);
+    
+    printf("Sum: %s\n", first.number);
     return EXIT_SUCCESS;
 }
 
-int binaryAdd(char *first, char *second){
-    size_t a,b;
-    int index=0, size=1;
-    int num, carry=0;
-    char * tmp;
-    char * sum = (char *)malloc(1*sizeof(char));
-    
-    a = strlen(first);
-    b = strlen(second);
-    
-    while((a>0) || (b>0) || (carry ==1)){
-        if((a<1) &&(b<1)){
-            num = 0;
-        }
-        else if(a<1){
-            num = 0 + (second[b-1]-'0');
-        }
-        else if(b<1){
-            num = (first[a-1]-'0') + 0;
-        }
-        else num = (first[a-1]-'0') + (second[b-1]-'0');
-        
-        if(a !=0)a--;
-        if(b !=0)b--;
-        num = num + carry;
-        
-        if (size-1 <=index){
-            size += 5;
-            tmp = (char *)realloc(sum, size*sizeof(char));
-            if(tmp == NULL){
-                free(sum);
-                return EXIT_FAILURE;
-            }
-            sum = tmp;
-        }
-        bitshift(sum, index);
-        sum[0] = num%2+'0';
-        carry = num/2;
-        index++;
-    }
-    sum[index] = '\0';
-    
-    exterminate(sum, index);
-    
-    printf("Sum: %s\n", sum);
-    free(sum);
-    return EXIT_SUCCESS;
-}
-
-int get_number(char **bin_addr){
+int get_number(Tbinary *bin_addr){
     char * tmp, * bin;
     char ch=1;
     int size = 1, index = 0;
-    bin = *bin_addr;
+    bin = bin_addr->number;
     
     while(ch){
         ch = getc(stdin);
         
-        if((ch == '\n') || (ch == ' ')){
-            ch = '\0';
-        }
+        if((ch == '\n') || (ch == ' ')) ch = '\0';
         
-        if((ch-'0' != 0) && (ch-'0' != 1) && (ch != '\0')){
-            return EXIT_FAILURE;
-        }
+        if((ch-'0' != 0) && (ch-'0' != 1) && (ch != '\0')) return EXIT_FAILURE;
         
         if (size-1 <=index){
             size += 5;
@@ -111,24 +83,31 @@ int get_number(char **bin_addr){
                 return EXIT_FAILURE;
             }
             bin = tmp;
-            *bin_addr = bin;
+            bin_addr->number = bin;
         }
         bin[index++] = ch;
     }
     
-    exterminate(bin, index);
+    bin_addr->length = index;
+    bin_addr->length = exterminate(bin_addr->number, bin_addr->length);
     
     return EXIT_SUCCESS;
 }
 
 int main (void)
 {
-    char * bin1 = (char *)malloc(sizeof(char));
-    if(bin1 == NULL)
+    Tbinary bin1 = {bin1.number = NULL, bin1.length = 0};
+    Tbinary bin2 = {bin2.number = NULL, bin2.length = 0};
+    
+    //allocate space for first number
+    bin1.number = (char *)malloc(sizeof(char));
+    if(bin1.number == NULL)
         return EXIT_FAILURE;
-    char * bin2 = (char *)malloc(sizeof(char));
-    if(bin2 == NULL){
-        free(bin1);
+    
+    //allocate space for second number
+    bin2.number = (char *)malloc(sizeof(char));
+    if(bin2.number == NULL){
+        free(bin1.number);
         return EXIT_FAILURE;
     }
     
@@ -136,22 +115,39 @@ int main (void)
     
     //number1 load
     if(get_number(&bin1) != EXIT_SUCCESS){
-        free(bin1);free(bin2);
-        printf("Invalid input.\n");
-        return EXIT_FAILURE;
-    }
-    //number2 load
-    if(get_number(&bin2) != EXIT_SUCCESS){
-        free(bin1);free(bin2);
-        printf("Invalid input.\n");
-        return EXIT_FAILURE;
-    }
-    if(binaryAdd(bin1, bin2) != EXIT_SUCCESS){
-        free(bin1);free(bin2);
+        free(bin1.number);
+        free(bin2.number);
         printf("Invalid input.\n");
         return EXIT_FAILURE;
     }
     
-    free(bin1); free(bin2);
+    //number2 load
+    if(get_number(&bin2) != EXIT_SUCCESS){
+        free(bin1.number);
+        free(bin2.number);
+        printf("Invalid input.\n");
+        return EXIT_FAILURE;
+    }
+    
+    //add the two numbers
+    if(bin1.length >= bin2.length){
+        if(binaryAdd(bin1, bin2) != EXIT_SUCCESS){
+            free(bin1.number);
+            free(bin2.number);
+            printf("Invalid input.\n");
+            return EXIT_FAILURE;
+        }
+    }
+    else{
+        if(binaryAdd(bin2, bin1) != EXIT_SUCCESS){
+            free(bin1.number);
+            free(bin2.number);
+            printf("Invalid input.\n");
+            return EXIT_FAILURE;
+        }
+    }
+    
+    free(bin1.number);
+    free(bin2.number);
     return EXIT_SUCCESS;
 }
