@@ -25,43 +25,43 @@ int get_pacient(TNemocnice *nemocnice){
         return EXIT_FAILURE;
     char c;
     
-        printf("Zadejte prijmeni, jmeno, rodne cislo, nemoc a zdravotni pojistovnu pacienta:\n");
-        if(scanf("%s", pacient->prijmeni) != 1){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if((c =getc(stdin)) != ' '){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if(scanf("%s", pacient->jmeno) != 1){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if((c =getc(stdin)) != ' '){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if(scanf("%d", &pacient->rodnec) != 1){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if((c =getc(stdin)) != ' '){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if(scanf("%s", pacient->nemoc) != 1){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if((c =getc(stdin)) != ' '){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
-        if(scanf("%s", pacient->zp) != 1){
-            printf("Invaid input.\n");
-            return EXIT_FAILURE;
-        }
+    printf("Enter the surname, name, birth number, disease, insurance company of the patient:\n");
+    if(scanf("%s", pacient->prijmeni) != 1){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if((c =getc(stdin)) != ' '){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if(scanf("%s", pacient->jmeno) != 1){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if((c =getc(stdin)) != ' '){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if(scanf("%d", &pacient->rodnec) != 1){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if((c =getc(stdin)) != ' '){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if(scanf("%s", pacient->nemoc) != 1){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if((c =getc(stdin)) != ' '){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
+    if(scanf("%s", pacient->zp) != 1){
+        printf("Invaid input.\n");
+        return EXIT_FAILURE;
+    }
     
     pacient->next = NULL;
     if(nemocnice->last == NULL){
@@ -79,9 +79,9 @@ int get_pacient(TNemocnice *nemocnice){
 
 int free_nem(TNemocnice *nemocnice){
     for (TPacient *pacient = nemocnice->first; pacient != NULL; pacient = pacient->next)
-        {
-            nemocnice->first = pacient->next;
-            free(pacient);
+    {
+        nemocnice->first = pacient->next;
+        free(pacient);
     }
     return EXIT_SUCCESS;
 }
@@ -96,12 +96,12 @@ int main(void)
     for (TPacient *pacient = nemocnice.first; pacient != NULL; pacient = pacient->next)
     {
         if(strcmp(pacient->nemoc, "tbc") == 0)
-            printf("Jmeno a prijmeni pacienta s tbc:\n %s %s\n", pacient->jmeno, pacient->prijmeni);
+            printf("The name and surname of patients with tbc:\n%s %s\n", pacient->jmeno, pacient->prijmeni);
         if(strcmp(pacient->zp, "211") == 0)
-             printf("Jmeno a prijmeni pacientu s pojistovnou 211 je:\n %s %s\n", pacient->jmeno, pacient->prijmeni);
+            printf("The name and surname of patients with the insurance company 211 is:\n%s %s\n", pacient->jmeno, pacient->prijmeni);
     }
     
-    printf("Prijmeni vsech pacientu jsou:\n");
+    printf("The surnames of all patients are:\n");
     for (TPacient *pacient = nemocnice.first; pacient != NULL; pacient = pacient->next)
     {
         printf("%s\n", pacient->prijmeni);
