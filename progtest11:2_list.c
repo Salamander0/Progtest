@@ -4,23 +4,25 @@
 
 #define PNUM 5
 
+//struktura pro pacienta
 typedef struct pacient{
     char prijmeni[50];
     char jmeno[50];
     int rodnec;
     char nemoc[50];
     char zp[50];
-    struct pacient *next;
-    struct pacient *prev;
+    struct pacient *next; //ukazatel na nasledujici polozku
+    struct pacient *prev; //ukazatel na predchozi polozku
 }TPacient;
 
+//struktura pro list
 typedef struct nemocnice{
-    struct pacient *first;
-    struct pacient *last;
+    struct pacient *first; //ukazatel na prvni polozku v seznamu
+    struct pacient *last;  //ukazatel na posledni polozku v seznamu
 }TNemocnice;
 
 int get_pacient(TNemocnice *nemocnice){
-    TPacient * pacient = (TPacient *)malloc(sizeof(TPacient));
+    TPacient * pacient = (TPacient *)malloc(sizeof(TPacient)); //vytvoreni nove polozky
     if(pacient == NULL)
         return EXIT_FAILURE;
     char c;
@@ -63,7 +65,9 @@ int get_pacient(TNemocnice *nemocnice){
         return EXIT_FAILURE;
     }
     
-    pacient->next = NULL;
+    pacient->next = NULL;  //nasledujici polozka je NULL protoze pridavame na konec listu
+    
+    //zarazeni polozky do listu
     if(nemocnice->last == NULL){
         nemocnice->first = pacient;
         nemocnice->last = pacient;
@@ -77,6 +81,7 @@ int get_pacient(TNemocnice *nemocnice){
     return EXIT_SUCCESS;
 }
 
+//ulovneni dynamicky alokovane pameti
 int free_nem(TNemocnice *nemocnice){
     for (TPacient *pacient = nemocnice->first; pacient != NULL; pacient = pacient->next)
     {
@@ -88,11 +93,13 @@ int free_nem(TNemocnice *nemocnice){
 
 int main(void)
 {
-    TNemocnice nemocnice = {nemocnice.first = NULL, nemocnice.last = NULL};
+    TNemocnice nemocnice = {nemocnice.first = NULL, nemocnice.last = NULL}; //vytvoreni listu
     
+    //nacteni polozek
     for(int i=0; i<PNUM; i++)
         get_pacient(&nemocnice);
     
+    //vlastni podminky a reseni
     for (TPacient *pacient = nemocnice.first; pacient != NULL; pacient = pacient->next)
     {
         if(strcmp(pacient->nemoc, "tbc") == 0)
@@ -107,6 +114,7 @@ int main(void)
         printf("%s\n", pacient->prijmeni);
     }
     
+    //uvolneni pameti
     free_nem(&nemocnice);
     return EXIT_SUCCESS;
 }
