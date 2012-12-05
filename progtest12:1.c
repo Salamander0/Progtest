@@ -20,7 +20,7 @@
 
 int main(void)
 {
-    double *vectors1, *vectors2, csm =0;
+    double *vectors1, *vectors2, sum=0, csm =0, t1=0, t2=0;
     int nvectors;
     
     //nacteni poctu vektoru
@@ -35,22 +35,32 @@ int main(void)
     for(int i=0; i<nvectors; i++){
         if(scanf("%lf", &vectors1[i]) !=1){
             printf("Invalid input.\n");
+            free(vectors1); free(vectors2);
             return EXIT_FAILURE;
         }
     }
     for(int i=0; i<nvectors; i++){
         if(scanf("%lf", &vectors2[i]) !=1){
             printf("Invalid input.\n");
+            free(vectors1); free(vectors2);
             return EXIT_FAILURE;
         }
     }
     //vypocet vektorove podobnosti
     for(int i=0; i<nvectors; i++) {
-        csm += (vectors1[i]*vectors2[i]);
+        sum += (vectors1[i]*vectors2[i]);
     }
-    csm = csm/pow(nvectors, 2);
     
-    printf("CSM: %lf\n", csm);
+    for(int i=0; i<nvectors; i++) {
+        t1 +=vectors1[i]*vectors1[i];
+        t2 +=vectors2[i]*vectors2[i];
+    }
+    t1 = sqrt(t1);
+    t2 = sqrt(t2);
+    
+    csm = sum/(t1*t2);
+    
+    printf("CSM: %.3f\n", csm);
     free(vectors1); free(vectors2);
     return EXIT_SUCCESS;
 }
