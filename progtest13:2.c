@@ -29,12 +29,12 @@ int main (void)
     int * numbers, newnum = 0, stopnum, ind;
     ssize_t size, cnt = 0, j=0;
     
-    if((scanf("%zd%d", &size, &stopnum) != 2) || (size <= 0)){
+    if((scanf("%ld%d", &size, &stopnum) != 2) || (size <= 0)){
         printf("Invalid input.\n");
         return EXIT_FAILURE;
     }
     numbers = (int *)malloc(size*sizeof(int));
-    printf("Size of array is:%zd\n",size);
+    printf("Array size is: %ld\n",size);
     
     do{
         if((ind = scanf("%d", &newnum)) == 0){
@@ -47,10 +47,10 @@ int main (void)
         }
         else{
             cnt++;
-            if(cnt >= size){
+            if(cnt > size){
                 size += size;
                 numbers = (int *)realloc(numbers, size*sizeof(int));
-                printf("New size of array is:%zd\n", size);
+                printf("New array size is: %ld\n", size);
             }
             numbers[cnt-1]=newnum;
         }
@@ -59,7 +59,7 @@ int main (void)
     qsort (numbers, cnt, sizeof(int), porovnej);
     
     for(ssize_t i = cnt; i>0; i--){
-        printf("[%zd]: %d\n", j, numbers[i-1]);
+        printf("[%ld]: %d\n", j, numbers[i-1]);
         j++;
     }
     
